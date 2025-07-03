@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # MERN Stack Personal Finance & Budget Tracking Web App
 
 A full-stack web application to help users track their income, expenses, budgets, and overall personal finances using the MERN stack (MongoDB, Express, React, Node.js).
@@ -78,3 +79,6 @@ A full-stack web application to help users track their income, expenses, budgets
 
 ---
 
+=======
+# Personal_Finance_-_Budget_Management_System_CDAC
+>>>>>>> 8b4d1b89accfbcf6ec860e89c02d195b3fe18ce5
