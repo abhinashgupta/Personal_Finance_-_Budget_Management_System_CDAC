@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create a new instance of Axios
 const apiClient = axios.create({
-    baseURL: "https://personal-finance-budget-management-c4th.onrender.com"
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 // Use an "interceptor" to automatically add the token to every request
