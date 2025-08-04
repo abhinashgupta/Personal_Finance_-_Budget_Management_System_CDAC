@@ -13,7 +13,7 @@ connectDB();
 // --- CORS Configuration ---
 const allowedOrigins = [
   "http://localhost:5173",
-  "https-fintrack-frontend-xyz.onrender.com", // Your local frontend
+  "https://fintrack-f01u.onrender.com", // Your local frontend
 ];
 
 const corsOptions = {
