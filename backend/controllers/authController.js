@@ -125,18 +125,18 @@ exports.login = asyncHandler(async (req, res) => {
     { expiresIn: "1h" }
   );
 
-  return res.status(200).json({
-    message: "User Logged In Successfully",
-    success: true,
-    token: token,
-    user: {
-      id: userExist._id,
-      firstname: userExist.firstname,
-      lastname: userExist.lastname,
-      email: userExist.email,
-      avatar: userExist.avatar,
-    },
-  });
+ return res.status(200).json({
+   message: "User Logged In Successfully",
+   success: true,
+   token: token, // This is correct
+   user: {
+     id: userExist._id,
+     firstname: userExist.firstname,
+     lastname: userExist.lastname,
+     email: userExist.email,
+     avatar: userExist.avatar,
+   },
+ });
 });
 
 exports.logout = (req, res) => {
@@ -147,6 +147,65 @@ exports.logout = (req, res) => {
 };
 
 // --- NEW: Function to verify the OTP ---
+exports.sendVerificationOtp = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Email is required." });
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found." });
+  }
+
+  if (user.isVerified) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Email is already verified." });
+  }
+
+  const otp = generateOTP();
+  const otpExpires = Date.now() + 10 * 60 * 1000;
+
+  user.otp = otp;
+  user.otpExpires = otpExpires;
+  await user.save();
+
+  const emailContent = `
+        <h1>Email Verification OTP</h1>
+        <p>You requested a new OTP for FinTrack email verification.</p>
+        <p>Your One-Time Password (OTP) is:</p>
+        <h2 style="color: #4CAF50; font-size: 24px; font-weight: bold;">${otp}</h2>
+        <p>This OTP is valid for 10 minutes.</p>
+        <p>Please enter this OTP in the verification page to activate your account.</p>
+        <p>If you did not request this, please ignore this email.</p>
+    `;
+
+  try {
+    await sendEmail(
+      user.email,
+      "FinTrack Email Verification OTP (Resend)",
+      emailContent
+    );
+    res
+      .status(200)
+      .json({ success: true, message: "New OTP sent to your email." });
+  } catch (error) {
+    console.error("Resend OTP email sending failed:", error);
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Failed to send OTP. Please try again later.",
+      });
+  }
+});
+
+
 exports.verifyEmailOtp = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
   if (!email || !otp) {

@@ -8,9 +8,9 @@ import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
 
 // New auth pages
-import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
-import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage.jsx";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage.jsx";
+import VerifyEmailPage from "./pages/auth/VerifyEmailPage.jsx";
 
 // Main application pages
 import DashboardPage from "./pages/DashboardPage";
