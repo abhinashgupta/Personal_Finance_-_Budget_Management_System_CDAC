@@ -3,6 +3,8 @@ import axios from "axios";
 import { ImSpinner2 } from "react-icons/im";
 import { FaRupeeSign } from "react-icons/fa";
 
+import apiClient from "../../api";
+
 const BudgetForm = ({ categories, onBudgetAdded }) => {
   const [limit, setLimit] = useState("");
   const [category, setCategory] = useState("");
@@ -49,16 +51,16 @@ const BudgetForm = ({ categories, onBudgetAdded }) => {
     }
 
     try {
-      const res = await axios.post(
-        "https://personal-finance-budget-management-c4th.onrender.com/budgets",
+      const res = await apiClient.post(
+        "/budgets",
         {
           limit: parseFloat(limit),
           category,
           period,
           startdate: startDate,
           enddate: endDate,
-        },
-        { withCredentials: true }
+        }
+       
       );
 
       if (res.data.success) {

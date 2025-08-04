@@ -4,6 +4,8 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 import ConfirmModal from "../common/ConfirmModal.jsx";
 
+import apiClient from "../../api.js";
+
 const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
   const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [editFormData, setEditFormData] = useState({});
@@ -28,11 +30,8 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
     setError(null);
     setDeleteLoadingId(categoryToDeleteId);
     try {
-      await axios.delete(
-        `https://personal-finance-budget-management-c4th.onrender.com/categories/${categoryToDeleteId}`,
-        {
-          withCredentials: true,
-        }
+      await apiClient.delete(
+        `/categories/${categoryToDeleteId}`
       );
       onCategoryDeleted();
     } catch (err) {

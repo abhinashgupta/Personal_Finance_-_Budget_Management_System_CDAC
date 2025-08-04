@@ -3,6 +3,8 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import apiClient from "../api";
+
 import { Chart as ChartJS, registerables } from "chart.js";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 import {
@@ -33,12 +35,7 @@ const DashboardPage = () => {
     setDashboardLoading(true);
     setError(null);
     try {
-      const res = await axios.get(
-        "https://personal-finance-budget-management-c4th.onrender.com/transactions/charts-data",
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await apiClient.get("/transactions/charts-data");
 
       if (res.data.success) {
         setBarChartData(res.data.barChartData);

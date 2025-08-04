@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { checkValidData } from "../../utils/FormValidation";
-import axios from "axios";
+// ⬇️ 1. Import your new apiClient
+import apiClient from "../../api"; // Make sure the path is correct
 
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
@@ -31,13 +32,12 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post(
-        "https://personal-finance-budget-management-c4th.onrender.com/auth/login",
-        { email, password },
-        { withCredentials: true }
-      );
+      // ⬇️ 2. Use apiClient and remove withCredentials
+      const res = await apiClient.post("/auth/login", { email, password });
 
       if (res.data.success) {
+        // ⬇️ 3. *** IMPORTANT: Save the token to localStorage ***
+        localStorage.setItem("authToken", res.data.token);
         authContextLogin(res.data.user);
       } else {
         setErrorMessage(
@@ -54,6 +54,7 @@ const Login = () => {
     }
   };
 
+  // ... rest of your component remains the same
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-200 to-indigo-300 relative overflow-hidden p-4 sm:p-8">
       <div className="absolute top-10 left-1/4 w-48 h-48 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>

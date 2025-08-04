@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../api";
 
 import TransactionForm from "../components/transactions/TransactionForm.jsx";
 import TransactionList from "../components/transactions/TransactionList.jsx";
@@ -27,11 +28,9 @@ const TransactionsPage = () => {
   const fetchCategories = async () => {
     setError(null);
     try {
-      const res = await axios.get(
-        "https://personal-finance-budget-management-c4th.onrender.com/categories",
-        {
-          withCredentials: true,
-        }
+      const res = await apiClient.get(
+  "/categories",
+        
       );
       if (res.data.success) {
         setCategories(res.data.categories);

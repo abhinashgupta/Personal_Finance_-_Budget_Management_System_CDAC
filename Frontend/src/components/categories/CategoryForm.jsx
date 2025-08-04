@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ImSpinner2 } from "react-icons/im";
 
+import apiClient from "../../api";
+
 const CategoryForm = ({ onCategoryAdded }) => {
   const [name, setName] = useState("");
   const [type, setType] = useState("expense");
@@ -20,13 +22,13 @@ const CategoryForm = ({ onCategoryAdded }) => {
     }
 
     try {
-      const res = await axios.post(
-        "https://personal-finance-budget-management-c4th.onrender.com/categories",
+      const res = await apiClient.post(
+        "/categories",
         {
           name,
           type,
-        },
-        { withCredentials: true }
+        }
+       
       );
 
       if (res.data.success) {

@@ -11,6 +11,8 @@ import { ImSpinner2 } from "react-icons/im";
 import { FaRupeeSign } from "react-icons/fa";
 import { formatCurrency } from "../../utils/formatters.js";
 
+import apiClient from "../../api.js";
+
 const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
   const [type, setType] = useState("expense");
   const [amount, setAmount] = useState("");
@@ -95,8 +97,8 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
     }
 
     try {
-      const res = await axios.post(
-        "https://personal-finance-budget-management-c4th.onrender.com/transactions",
+      const res = await apiClient.post(
+        "/transactions",
         {
           type,
           amount: parseFloat(amount),
@@ -104,8 +106,7 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
           description,
           date,
           recurring,
-        },
-        { withCredentials: true }
+        }
       );
 
       if (res.data.success) {

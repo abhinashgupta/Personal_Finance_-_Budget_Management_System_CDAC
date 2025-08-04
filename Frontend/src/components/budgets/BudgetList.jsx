@@ -6,6 +6,8 @@ import { FaRupeeSign } from "react-icons/fa";
 import { formatCurrency, formatDate } from "../../utils/formatters.js";
 import ConfirmModal from "../common/ConfirmModal.jsx";
 
+import apiClient from "../../api.js";
+
 const BudgetList = ({
   budgets,
   categories,
@@ -36,11 +38,9 @@ const BudgetList = ({
     setError(null);
     setDeleteLoadingId(budgetToDeleteId);
     try {
-      await axios.delete(
-        `https://personal-finance-budget-management-c4th.onrender.com/budgets/${budgetToDeleteId}`,
-        {
-          withCredentials: true,
-        }
+      await apiClient.delete(
+        `/budgets/${budgetToDeleteId}`,
+        
       );
       onBudgetDeleted();
     } catch (err) {

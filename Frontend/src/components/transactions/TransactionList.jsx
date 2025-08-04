@@ -5,6 +5,8 @@ import { ImSpinner2 } from "react-icons/im";
 import { formatCurrency, formatDate } from "../../utils/formatters.js";
 import ConfirmModal from "../common/ConfirmModal.jsx";
 
+import apiClient from "../../api.js";
+
 const TransactionList = ({
   transactions,
   categories,
@@ -35,11 +37,8 @@ const TransactionList = ({
     setError(null);
     setDeleteLoadingId(transactionToDeleteId);
     try {
-      await axios.delete(
-        `https://personal-finance-budget-management-c4th.onrender.com/transactions/${transactionToDeleteId}`,
-        {
-          withCredentials: true,
-        }
+      await apiClient.delete(
+        `/transactions/${transactionToDeleteId}`
       );
       onTransactionDeleted();
     } catch (err) {
@@ -88,13 +87,12 @@ const TransactionList = ({
     setEditLoadingId(editingTransactionId);
 
     try {
-      const res = await axios.put(
-        `https://personal-finance-budget-management-c4th.onrender.com/transactions/${editingTransactionId}`,
+      const res = await apiClient.put(
+        `/transactions/${editingTransactionId}`,
         {
           ...editFormData,
           amount: parseFloat(editFormData.amount),
-        },
-        { withCredentials: true }
+        }
       );
 
       if (res.data.success) {

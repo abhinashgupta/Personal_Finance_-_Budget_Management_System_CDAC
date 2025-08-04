@@ -5,6 +5,8 @@ import axios from "axios";
 import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 
+import apiClient from "../../api";
+
 const SignUp = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -36,10 +38,9 @@ const SignUp = () => {
     }
 
     try {
-      const res = await axios.post(
-        "https://personal-finance-budget-management-c4th.onrender.com/auth/register",
-        { firstname, lastname, email, password },
-        { withCredentials: true }
+      const res = await apiClient.post(
+        "/auth/register",
+        { firstname, lastname, email, password }
       );
 
       console.log("Sign Up API response:", res.data);

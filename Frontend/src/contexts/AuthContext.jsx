@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import axios from "axios";
+// ⬇️ 1. Import your new apiClient
+import apiClient from "../api"; // Adjust path if necessary
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext(null);
@@ -11,20 +12,26 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   const checkAuthStatus = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      setLoading(false);
+      setIsAuthenticated(false);
+      setUser(null);
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await axios.get(
-        "https://personal-finance-budget-management-c4th.onrender.com/users/profile",
-        {
-          withCredentials: true,
-        }
-      );
+      // ⬇️ 2. Use apiClient here. It automatically adds the token.
+      const res = await apiClient.get("/users/profile");
+
       if (res.data.success) {
         setUser(res.data.user);
         setIsAuthenticated(true);
       } else {
         setUser(null);
         setIsAuthenticated(false);
+        localStorage.removeItem("authToken"); // Clean up invalid token
       }
     } catch (error) {
       console.error(
@@ -33,6 +40,7 @@ export const AuthProvider = ({ children }) => {
       );
       setUser(null);
       setIsAuthenticated(false);
+      localStorage.removeItem("authToken"); // Clean up invalid token
     } finally {
       setLoading(false);
     }
@@ -44,27 +52,12 @@ export const AuthProvider = ({ children }) => {
     navigate("/dashboard");
   };
 
-  const logout = async () => {
-    try {
-      await axios.post(
-        "https://personal-finance-budget-management-c4th.onrender.com/auth/logout",
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-      setUser(null);
-      setIsAuthenticated(false);
-      navigate("/");
-    } catch (error) {
-      console.error(
-        "AuthContext: Logout failed:",
-        error.response?.data?.message || error.message
-      );
-      setUser(null);
-      setIsAuthenticated(false);
-      navigate("/");
-    }
+  const logout = () => {
+    // ⬇️ 3. Clear the token from localStorage on logout
+    localStorage.removeItem("authToken");
+    setUser(null);
+    setIsAuthenticated(false);
+    navigate("/");
   };
 
   useEffect(() => {

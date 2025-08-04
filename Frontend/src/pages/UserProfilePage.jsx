@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { FiMail, FiUser, FiEdit, FiSave, FiX } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 
+import apiClient from "../api";
+
 import StatusDisplay from "../components/common/StatusDisplay.jsx";
 
 const UserProfilePage = () => {
@@ -42,11 +44,8 @@ const UserProfilePage = () => {
     setPageLoading(true);
     setError(null);
     try {
-      const res = await axios.get(
-        "https://personal-finance-budget-management-c4th.onrender.com/users/profile",
-        {
-          withCredentials: true,
-        }
+      const res = await apiClient.get(
+        "/users/profile"
       );
       if (res.data.success && res.data.user) {
         setProfileData({
