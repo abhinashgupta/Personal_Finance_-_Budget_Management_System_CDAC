@@ -4,8 +4,6 @@ const authContoller = require("../controllers/authController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
 
-router.use(authMiddleware);
-
 router.post('/register', authContoller.register);
 router.post('/login', authContoller.login);
 
