@@ -84,12 +84,9 @@ const UserProfilePage = () => {
     }
 
     try {
-      const res = await axios.put(
-        "https://personal-finance-budget-management-c4th.onrender.com/users/profile",
-        profileData,
-        {
-          withCredentials: true,
-        }
+      const res = await apiClient.put(
+        "/users/profile",
+        profileData
       );
       if (res.data.success) {
         setProfileData(res.data.user);

@@ -116,13 +116,12 @@ const BudgetList = ({
     }
 
     try {
-      const res = await axios.put(
-        `https://personal-finance-budget-management-c4th.onrender.com/budgets/${editingBudgetId}`,
+      const res = await apiClient.put(
+        `/budgets/${editingBudgetId}`,
         {
           ...editFormData,
           limit: parseFloat(editFormData.limit),
-        },
-        { withCredentials: true }
+        }
       );
 
       if (res.data.success) {

@@ -56,11 +56,9 @@ const TransactionsPage = () => {
       if (sortBy) queryParams.append("sortBy", sortBy);
       if (sortOrder) queryParams.append("sortOrder", sortOrder);
 
-      const url = `https://personal-finance-budget-management-c4th.onrender.com/transactions?${queryParams.toString()}`;
-
-      const res = await axios.get(url, {
-        withCredentials: true,
-      });
+      const res = await apiClient.get(
+        `/transactions?${queryParams.toString()}`
+      );
       if (res.data.success) {
         setTransactions(res.data.transactions);
       } else {
@@ -77,11 +75,9 @@ const TransactionsPage = () => {
   const fetchBudgets = async () => {
     setError(null);
     try {
-      const res = await axios.get(
-        "https://personal-finance-budget-management-c4th.onrender.com/budgets",
-        {
-          withCredentials: true,
-        }
+      const res = await apiClient.get(
+        "/budgets"
+      
       );
       if (res.data.success) {
         setBudgets(res.data.budgets);

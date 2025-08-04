@@ -59,11 +59,7 @@ const BudgetsPage = () => {
             if (sortBy) queryParams.append('sortBy', sortBy);
             if (sortOrder) queryParams.append('sortOrder', sortOrder);
 
-            const url = `https://personal-finance-budget-management-c4th.onrender.com/budgets?${queryParams.toString()}`;
-
-            const res = await axios.get(url, {
-                withCredentials: true
-            });
+            const res = await apiClient.get(`/budgets?${queryParams.toString()}`);
             if (res.data.success) {
                 setBudgets(res.data.budgets);
             } else {

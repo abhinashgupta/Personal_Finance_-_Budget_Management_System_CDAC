@@ -87,13 +87,12 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
     }
 
     try {
-      const res = await axios.put(
-        `https://personal-finance-budget-management-c4th.onrender.com/categories/${editingCategoryId}`,
+      const res = await apiClient.put(
+        `/categories/${editingCategoryId}`,
         {
           name: editFormData.name,
           type: editFormData.type,
-        },
-        { withCredentials: true }
+        }
       );
 
       if (res.data.success) {
