@@ -27,9 +27,12 @@ const BudgetsPage = () => {
     const fetchCategories = async () => {
         setError(null);
         try {
-            const res = await axios.get('http://localhost:5000/categories', {
-                withCredentials: true
-            });
+            const res = await axios.get(
+              "https://personal-finance-budget-management-c4th.onrender.com/categories",
+              {
+                withCredentials: true,
+              }
+            );
             if (res.data.success) {
                 setCategories(res.data.categories);
             } else {
@@ -58,7 +61,7 @@ const BudgetsPage = () => {
             if (sortBy) queryParams.append('sortBy', sortBy);
             if (sortOrder) queryParams.append('sortOrder', sortOrder);
 
-            const url = `http://localhost:5000/budgets?${queryParams.toString()}`;
+            const url = `https://personal-finance-budget-management-c4th.onrender.com/budgets?${queryParams.toString()}`;
 
             const res = await axios.get(url, {
                 withCredentials: true

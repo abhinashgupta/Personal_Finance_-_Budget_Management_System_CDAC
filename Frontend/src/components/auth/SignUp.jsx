@@ -37,7 +37,7 @@ const SignUp = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/auth/register",
+        "https://personal-finance-budget-management-c4th.onrender.com/auth/register",
         { firstname, lastname, email, password },
         { withCredentials: true }
       );
@@ -48,11 +48,14 @@ const SignUp = () => {
         setErrorMessage("✅ Registration successful! Please login.");
         setTimeout(() => navigate("/"), 2000);
       } else {
-        setErrorMessage(res.data.message || "Registration failed. Please try again.");
+        setErrorMessage(
+          res.data.message || "Registration failed. Please try again."
+        );
       }
     } catch (error) {
       const errMsg =
-        error.response?.data?.message || "Registration failed. Please try again.";
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
       setErrorMessage(errMsg);
       console.error("Sign Up error:", error);
     } finally {
@@ -78,57 +81,89 @@ const SignUp = () => {
         </h2>
 
         <div className="mb-4 relative">
-          <label htmlFor="firstname" className="sr-only">First Name</label>
-          <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <label htmlFor="firstname" className="sr-only">
+            First Name
+          </label>
+          <FiUser
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             id="firstname"
             type="text"
             placeholder="First Name"
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-3 focus:ring-purple-400 focus:border-purple-500 transition duration-200 ease-in-out text-gray-800 placeholder-gray-500 text-lg"
             value={firstname}
-            onChange={(e) => { setFirstname(e.target.value); setErrorMessage(null); }}
+            onChange={(e) => {
+              setFirstname(e.target.value);
+              setErrorMessage(null);
+            }}
             required
           />
         </div>
 
         <div className="mb-4 relative">
-          <label htmlFor="lastname" className="sr-only">Last Name</label>
-          <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <label htmlFor="lastname" className="sr-only">
+            Last Name
+          </label>
+          <FiUser
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             id="lastname"
             type="text"
             placeholder="Last Name"
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-3 focus:ring-purple-400 focus:border-purple-500 transition duration-200 ease-in-out text-gray-800 placeholder-gray-500 text-lg"
             value={lastname}
-            onChange={(e) => { setLastname(e.target.value); setErrorMessage(null); }}
+            onChange={(e) => {
+              setLastname(e.target.value);
+              setErrorMessage(null);
+            }}
             required
           />
         </div>
 
         <div className="mb-4 relative">
-          <label htmlFor="email" className="sr-only">Email</label>
-          <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <label htmlFor="email" className="sr-only">
+            Email
+          </label>
+          <FiMail
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             id="email"
             type="email"
             placeholder="Email Address"
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-3 focus:ring-purple-400 focus:border-purple-500 transition duration-200 ease-in-out text-gray-800 placeholder-gray-500 text-lg"
             value={email}
-            onChange={(e) => { setEmail(e.target.value); setErrorMessage(null); }}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrorMessage(null);
+            }}
             required
           />
         </div>
 
         <div className="relative mb-4">
-          <label htmlFor="password" className="sr-only">Password</label>
-          <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <label htmlFor="password" className="sr-only">
+            Password
+          </label>
+          <FiLock
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             id="password"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-3 focus:ring-purple-400 focus:border-purple-500 transition duration-200 ease-in-out text-gray-800 placeholder-gray-500 text-lg"
             value={password}
-            onChange={(e) => { setPassword(e.target.value); setErrorMessage(null); }}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setErrorMessage(null);
+            }}
             required
           />
           <span
@@ -140,15 +175,23 @@ const SignUp = () => {
         </div>
 
         <div className="relative mb-6">
-          <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
-          <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <label htmlFor="confirmPassword" className="sr-only">
+            Confirm Password
+          </label>
+          <FiLock
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             id="confirmPassword"
             type={showConfirmPassword ? "text" : "password"}
             placeholder="Confirm Password"
             className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-3 focus:ring-purple-400 focus:border-purple-500 transition duration-200 ease-in-out text-gray-800 placeholder-gray-500 text-lg"
             value={confirmPassword}
-            onChange={(e) => { setConfirmPassword(e.target.value); setErrorMessage(null); }}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setErrorMessage(null);
+            }}
             required
           />
           <span
@@ -170,7 +213,11 @@ const SignUp = () => {
           className={`w-full bg-purple-600 text-white font-bold py-3 rounded-xl hover:bg-purple-700
                       focus:outline-none focus:ring-3 focus:ring-purple-400 focus:ring-offset-2
                       transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg
-                      ${isLoading ? "opacity-60 cursor-not-allowed flex items-center justify-center gap-2" : ""}`}
+                      ${
+                        isLoading
+                          ? "opacity-60 cursor-not-allowed flex items-center justify-center gap-2"
+                          : ""
+                      }`}
           disabled={isLoading}
         >
           {isLoading ? (

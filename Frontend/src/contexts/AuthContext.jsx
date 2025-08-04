@@ -1,6 +1,6 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useState, useEffect, useContext } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext(null);
 
@@ -13,9 +13,12 @@ export const AuthProvider = ({ children }) => {
   const checkAuthStatus = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/users/profile', {
-        withCredentials: true
-      });
+      const res = await axios.get(
+        "https://personal-finance-budget-management-c4th.onrender.com/users/profile",
+        {
+          withCredentials: true,
+        }
+      );
       if (res.data.success) {
         setUser(res.data.user);
         setIsAuthenticated(true);
@@ -24,7 +27,10 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
       }
     } catch (error) {
-      console.error('AuthContext: Authentication check failed:', error.response?.data?.message || error.message);
+      console.error(
+        "AuthContext: Authentication check failed:",
+        error.response?.data?.message || error.message
+      );
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -35,22 +41,29 @@ export const AuthProvider = ({ children }) => {
   const login = (userData) => {
     setUser(userData);
     setIsAuthenticated(true);
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:5000/auth/logout', {}, {
-        withCredentials: true
-      });
+      await axios.post(
+        "https://personal-finance-budget-management-c4th.onrender.com/auth/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
       setUser(null);
       setIsAuthenticated(false);
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      console.error('AuthContext: Logout failed:', error.response?.data?.message || error.message);
+      console.error(
+        "AuthContext: Logout failed:",
+        error.response?.data?.message || error.message
+      );
       setUser(null);
       setIsAuthenticated(false);
-      navigate('/');
+      navigate("/");
     }
   };
 
@@ -64,7 +77,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     logout,
-    checkAuthStatus
+    checkAuthStatus,
   };
 
   return (
@@ -77,7 +90,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

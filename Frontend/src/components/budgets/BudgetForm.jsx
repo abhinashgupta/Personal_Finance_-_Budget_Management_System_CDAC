@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { ImSpinner2 } from 'react-icons/im';
-import { FaRupeeSign } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { ImSpinner2 } from "react-icons/im";
+import { FaRupeeSign } from "react-icons/fa";
 
 const BudgetForm = ({ categories, onBudgetAdded }) => {
-  const [limit, setLimit] = useState('');
-  const [category, setCategory] = useState('');
-  const [period, setPeriod] = useState('monthly');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [limit, setLimit] = useState("");
+  const [category, setCategory] = useState("");
+  const [period, setPeriod] = useState("monthly");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const budgetableCategories = categories.filter(cat => cat.type === 'expense');
+  const budgetableCategories = categories.filter(
+    (cat) => cat.type === "expense"
+  );
 
   useEffect(() => {
-    if (!budgetableCategories.some(cat => cat._id === category)) {
-      setCategory('');
+    if (!budgetableCategories.some((cat) => cat._id === category)) {
+      setCategory("");
     }
   }, [budgetableCategories, category]);
 
@@ -26,48 +28,52 @@ const BudgetForm = ({ categories, onBudgetAdded }) => {
     setIsLoading(true);
 
     if (!limit || !category || !period || !startDate || !endDate) {
-      setError('Please fill all required fields.');
+      setError("Please fill all required fields.");
       setIsLoading(false);
       return;
     }
     if (parseFloat(limit) <= 0) {
-      setError('Budget limit must be a positive number.');
+      setError("Budget limit must be a positive number.");
       setIsLoading(false);
       return;
     }
     if (!category) {
-      setError('Please select a valid category for the budget.');
+      setError("Please select a valid category for the budget.");
       setIsLoading(false);
       return;
     }
     if (new Date(startDate) >= new Date(endDate)) {
-        setError('Start date must be before end date.');
-        setIsLoading(false);
-        return;
+      setError("Start date must be before end date.");
+      setIsLoading(false);
+      return;
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/budgets', {
-        limit: parseFloat(limit),
-        category,
-        period,
-        startdate: startDate,
-        enddate: endDate
-      }, { withCredentials: true });
+      const res = await axios.post(
+        "https://personal-finance-budget-management-c4th.onrender.com/budgets",
+        {
+          limit: parseFloat(limit),
+          category,
+          period,
+          startdate: startDate,
+          enddate: endDate,
+        },
+        { withCredentials: true }
+      );
 
       if (res.data.success) {
-        console.log('Budget added:', res.data.budget);
+        console.log("Budget added:", res.data.budget);
         onBudgetAdded();
-        setLimit('');
-        setCategory('');
-        setPeriod('monthly');
-        setStartDate('');
-        setEndDate('');
+        setLimit("");
+        setCategory("");
+        setPeriod("monthly");
+        setStartDate("");
+        setEndDate("");
       } else {
-        setError(res.data.message || 'Failed to set budget.');
+        setError(res.data.message || "Failed to set budget.");
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error setting budget.');
+      setError(err.response?.data?.message || "Error setting budget.");
       console.error("Set budget error:", err);
     } finally {
       setIsLoading(false);
@@ -83,7 +89,12 @@ const BudgetForm = ({ categories, onBudgetAdded }) => {
       )}
 
       <div>
-        <label htmlFor="budgetCategory" className="block text-gray-700 font-medium mb-1">Category</label>
+        <label
+          htmlFor="budgetCategory"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          Category
+        </label>
         <select
           id="budgetCategory"
           value={category}
@@ -93,21 +104,31 @@ const BudgetForm = ({ categories, onBudgetAdded }) => {
         >
           <option value="">Select a category for budget</option>
           {budgetableCategories.length > 0 ? (
-            budgetableCategories.map(cat => (
+            budgetableCategories.map((cat) => (
               <option key={cat._id} value={cat._id}>
                 {cat.name}
               </option>
             ))
           ) : (
-            <option value="" disabled>No expense categories available. Please create one.</option>
+            <option value="" disabled>
+              No expense categories available. Please create one.
+            </option>
           )}
         </select>
       </div>
 
       <div>
-        <label htmlFor="budgetLimit" className="block text-gray-700 font-medium mb-1">Budget Limit</label>
+        <label
+          htmlFor="budgetLimit"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          Budget Limit
+        </label>
         <div className="relative">
-          <FaRupeeSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <FaRupeeSign
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             id="budgetLimit"
             type="number"
@@ -121,7 +142,12 @@ const BudgetForm = ({ categories, onBudgetAdded }) => {
       </div>
 
       <div>
-        <label htmlFor="budgetPeriod" className="block text-gray-700 font-medium mb-1">Period</label>
+        <label
+          htmlFor="budgetPeriod"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          Period
+        </label>
         <select
           id="budgetPeriod"
           value={period}
@@ -136,7 +162,12 @@ const BudgetForm = ({ categories, onBudgetAdded }) => {
       </div>
 
       <div>
-        <label htmlFor="budgetStartDate" className="block text-gray-700 font-medium mb-1">Start Date</label>
+        <label
+          htmlFor="budgetStartDate"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          Start Date
+        </label>
         <input
           id="budgetStartDate"
           type="date"
@@ -148,7 +179,12 @@ const BudgetForm = ({ categories, onBudgetAdded }) => {
       </div>
 
       <div>
-        <label htmlFor="budgetEndDate" className="block text-gray-700 font-medium mb-1">End Date</label>
+        <label
+          htmlFor="budgetEndDate"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          End Date
+        </label>
         <input
           id="budgetEndDate"
           type="date"
@@ -162,10 +198,20 @@ const BudgetForm = ({ categories, onBudgetAdded }) => {
       <button
         type="submit"
         className={`w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-200
-                     ${isLoading ? 'opacity-60 cursor-not-allowed flex items-center justify-center gap-2' : ''}`}
+                     ${
+                       isLoading
+                         ? "opacity-60 cursor-not-allowed flex items-center justify-center gap-2"
+                         : ""
+                     }`}
         disabled={isLoading}
       >
-        {isLoading ? <><ImSpinner2 className="animate-spin" /> Setting Budget...</> : 'Set Budget'}
+        {isLoading ? (
+          <>
+            <ImSpinner2 className="animate-spin" /> Setting Budget...
+          </>
+        ) : (
+          "Set Budget"
+        )}
       </button>
     </form>
   );

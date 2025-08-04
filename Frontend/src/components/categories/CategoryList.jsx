@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import { ImSpinner2 } from 'react-icons/im';
-import ConfirmModal from '../common/ConfirmModal.jsx';
+import React, { useState } from "react";
+import axios from "axios";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { ImSpinner2 } from "react-icons/im";
+import ConfirmModal from "../common/ConfirmModal.jsx";
 
 const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
   const [editingCategoryId, setEditingCategoryId] = useState(null);
@@ -13,7 +13,7 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [categoryToDeleteId, setCategoryToDeleteId] = useState(null);
-  const [categoryToDeleteName, setCategoryToDeleteName] = useState('');
+  const [categoryToDeleteName, setCategoryToDeleteName] = useState("");
 
   const confirmDelete = (id, name) => {
     setCategoryToDeleteId(id);
@@ -28,43 +28,46 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
     setError(null);
     setDeleteLoadingId(categoryToDeleteId);
     try {
-      await axios.delete(`http://localhost:5000/categories/${categoryToDeleteId}`, {
-        withCredentials: true
-      });
+      await axios.delete(
+        `https://personal-finance-budget-management-c4th.onrender.com/categories/${categoryToDeleteId}`,
+        {
+          withCredentials: true,
+        }
+      );
       onCategoryDeleted();
     } catch (err) {
-      setError(err.response?.data?.message || 'Error deleting category.');
+      setError(err.response?.data?.message || "Error deleting category.");
       console.error("Delete category error:", err);
     } finally {
       setDeleteLoadingId(null);
       setCategoryToDeleteId(null);
-      setCategoryToDeleteName('');
+      setCategoryToDeleteName("");
     }
   };
 
   const cancelDelete = () => {
     setIsConfirmModalOpen(false);
     setCategoryToDeleteId(null);
-    setCategoryToDeleteName('');
+    setCategoryToDeleteName("");
   };
 
   const handleDelete = async (id) => {
-    confirmDelete(id, categories.find(cat => cat._id === id)?.name);
+    confirmDelete(id, categories.find((cat) => cat._id === id)?.name);
   };
 
   const handleEditClick = (category) => {
     setEditingCategoryId(category._id);
     setEditFormData({
       name: category.name,
-      type: category.type
+      type: category.type,
     });
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setEditFormData(prev => ({
+    setEditFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -74,30 +77,34 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
     setEditLoadingId(editingCategoryId);
 
     if (!editFormData.name || !editFormData.type) {
-        setError('Category name and type are required.');
-        setEditLoadingId(null);
-        return;
+      setError("Category name and type are required.");
+      setEditLoadingId(null);
+      return;
     }
-    if (!['income', 'expense'].includes(editFormData.type)) {
-        setError('Type must be "income" or "expense".');
-        setEditLoadingId(null);
-        return;
+    if (!["income", "expense"].includes(editFormData.type)) {
+      setError('Type must be "income" or "expense".');
+      setEditLoadingId(null);
+      return;
     }
 
     try {
-      const res = await axios.put(`http://localhost:5000/categories/${editingCategoryId}`, {
-        name: editFormData.name,
-        type: editFormData.type
-      }, { withCredentials: true });
+      const res = await axios.put(
+        `https://personal-finance-budget-management-c4th.onrender.com/categories/${editingCategoryId}`,
+        {
+          name: editFormData.name,
+          type: editFormData.type,
+        },
+        { withCredentials: true }
+      );
 
       if (res.data.success) {
         onCategoryUpdated();
         setEditingCategoryId(null);
       } else {
-        setError(res.data.message || 'Failed to update category.');
+        setError(res.data.message || "Failed to update category.");
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error updating category.');
+      setError(err.response?.data?.message || "Error updating category.");
       console.error("Update category error:", err);
     } finally {
       setEditLoadingId(null);
@@ -118,10 +125,12 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
       )}
 
       {categories.length === 0 ? (
-        <p className="text-gray-500 italic text-center py-4">No categories added yet. Add one to see it here!</p>
+        <p className="text-gray-500 italic text-center py-4">
+          No categories added yet. Add one to see it here!
+        </p>
       ) : (
         <ul className="space-y-3">
-          {categories.map(cat => (
+          {categories.map((cat) => (
             <li
               key={cat._id}
               className="p-3 bg-blue-50 rounded-lg border border-blue-100 shadow-sm transition-all duration-200 ease-in-out
@@ -130,7 +139,9 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
               {editingCategoryId === cat._id ? (
                 <form onSubmit={handleEditSubmit} className="w-full space-y-2">
                   <div>
-                    <label htmlFor="edit-name" className="sr-only">Category Name</label>
+                    <label htmlFor="edit-name" className="sr-only">
+                      Category Name
+                    </label>
                     <input
                       id="edit-name"
                       type="text"
@@ -144,7 +155,9 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
                   </div>
 
                   <div>
-                    <label htmlFor="edit-type" className="sr-only">Type</label>
+                    <label htmlFor="edit-type" className="sr-only">
+                      Type
+                    </label>
                     <select
                       id="edit-type"
                       name="type"
@@ -172,15 +185,28 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
                       className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center gap-1"
                       disabled={editLoadingId === cat._id}
                     >
-                      {editLoadingId === cat._id ? <ImSpinner2 className="animate-spin" /> : <FiEdit size={16} />} Update
+                      {editLoadingId === cat._id ? (
+                        <ImSpinner2 className="animate-spin" />
+                      ) : (
+                        <FiEdit size={16} />
+                      )}{" "}
+                      Update
                     </button>
                   </div>
                 </form>
               ) : (
                 <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center">
                   <div className="mb-2 sm:mb-0">
-                    <p className="font-semibold text-gray-800 text-lg">{cat.name}</p>
-                    <p className={`text-sm ${cat.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                    <p className="font-semibold text-gray-800 text-lg">
+                      {cat.name}
+                    </p>
+                    <p
+                      className={`text-sm ${
+                        cat.type === "income"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
                       {cat.type.charAt(0).toUpperCase() + cat.type.slice(1)}
                     </p>
                   </div>
@@ -196,7 +222,11 @@ const CategoryList = ({ categories, onCategoryDeleted, onCategoryUpdated }) => {
                       className="text-red-500 hover:text-red-700 text-sm p-2 rounded-md hover:bg-red-100 transition flex items-center gap-1"
                       disabled={deleteLoadingId === cat._id}
                     >
-                      {deleteLoadingId === cat._id ? <ImSpinner2 className="animate-spin" /> : <FiTrash2 size={18} />}
+                      {deleteLoadingId === cat._id ? (
+                        <ImSpinner2 className="animate-spin" />
+                      ) : (
+                        <FiTrash2 size={18} />
+                      )}
                     </button>
                   </div>
                 </div>

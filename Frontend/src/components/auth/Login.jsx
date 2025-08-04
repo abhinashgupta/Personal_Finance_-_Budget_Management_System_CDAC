@@ -5,7 +5,7 @@ import axios from "axios";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 
-import { useAuth } from '../../contexts/AuthContext.jsx';
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -16,7 +16,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { login: authContextLogin } = useAuth();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/auth/login",
+        "https://personal-finance-budget-management-c4th.onrender.com/auth/login",
         { email, password },
         { withCredentials: true }
       );
@@ -40,7 +40,9 @@ const Login = () => {
       if (res.data.success) {
         authContextLogin(res.data.user);
       } else {
-        setErrorMessage(res.data.message || "Login failed. Please check your credentials.");
+        setErrorMessage(
+          res.data.message || "Login failed. Please check your credentials."
+        );
       }
     } catch (error) {
       const errMsg =
@@ -70,8 +72,13 @@ const Login = () => {
         </h2>
 
         <div className="mb-6 relative">
-          <label htmlFor="email" className="sr-only">Email</label>
-          <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <label htmlFor="email" className="sr-only">
+            Email
+          </label>
+          <FiMail
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             id="email"
             type="email"
@@ -79,14 +86,22 @@ const Login = () => {
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500
                        transition duration-200 ease-in-out text-gray-800 placeholder-gray-500 text-lg"
             value={email}
-            onChange={(e) => { setEmail(e.target.value); setErrorMessage(null); }}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrorMessage(null);
+            }}
             required
           />
         </div>
 
         <div className="relative mb-6">
-          <label htmlFor="password" className="sr-only">Password</label>
-          <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <label htmlFor="password" className="sr-only">
+            Password
+          </label>
+          <FiLock
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             id="password"
             type={showPassword ? "text" : "password"}
@@ -94,7 +109,10 @@ const Login = () => {
             className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500
                                transition duration-200 ease-in-out text-gray-800 placeholder-gray-500 text-lg"
             value={password}
-            onChange={(e) => { setPassword(e.target.value); setErrorMessage(null); }}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setErrorMessage(null);
+            }}
             required
           />
           <span
@@ -116,7 +134,11 @@ const Login = () => {
           className={`w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700
                       focus:outline-none focus:ring-3 focus:ring-blue-400 focus:ring-offset-2
                       transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg
-                      ${isLoading ? "opacity-60 cursor-not-allowed flex items-center justify-center gap-2" : ""}`}
+                      ${
+                        isLoading
+                          ? "opacity-60 cursor-not-allowed flex items-center justify-center gap-2"
+                          : ""
+                      }`}
           disabled={isLoading}
         >
           {isLoading ? (

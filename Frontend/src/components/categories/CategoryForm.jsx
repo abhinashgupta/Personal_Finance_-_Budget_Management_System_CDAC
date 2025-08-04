@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { ImSpinner2 } from 'react-icons/im';
+import React, { useState } from "react";
+import axios from "axios";
+import { ImSpinner2 } from "react-icons/im";
 
 const CategoryForm = ({ onCategoryAdded }) => {
-  const [name, setName] = useState('');
-  const [type, setType] = useState('expense');
+  const [name, setName] = useState("");
+  const [type, setType] = useState("expense");
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -14,27 +14,31 @@ const CategoryForm = ({ onCategoryAdded }) => {
     setIsLoading(true);
 
     if (!name || !type) {
-      setError('Category name and type are required.');
+      setError("Category name and type are required.");
       setIsLoading(false);
       return;
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/categories', {
-        name,
-        type
-      }, { withCredentials: true });
+      const res = await axios.post(
+        "https://personal-finance-budget-management-c4th.onrender.com/categories",
+        {
+          name,
+          type,
+        },
+        { withCredentials: true }
+      );
 
       if (res.data.success) {
-        console.log('Category added:', res.data.category);
+        console.log("Category added:", res.data.category);
         onCategoryAdded();
-        setName('');
-        setType('expense');
+        setName("");
+        setType("expense");
       } else {
-        setError(res.data.message || 'Failed to add category.');
+        setError(res.data.message || "Failed to add category.");
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error adding category.');
+      setError(err.response?.data?.message || "Error adding category.");
       console.error("Add category error:", err);
     } finally {
       setIsLoading(false);
@@ -50,7 +54,12 @@ const CategoryForm = ({ onCategoryAdded }) => {
       )}
 
       <div>
-        <label htmlFor="categoryName" className="block text-gray-700 font-medium mb-1">Category Name</label>
+        <label
+          htmlFor="categoryName"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          Category Name
+        </label>
         <input
           id="categoryName"
           type="text"
@@ -63,7 +72,12 @@ const CategoryForm = ({ onCategoryAdded }) => {
       </div>
 
       <div>
-        <label htmlFor="categoryType" className="block text-gray-700 font-medium mb-1">Type</label>
+        <label
+          htmlFor="categoryType"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          Type
+        </label>
         <select
           id="categoryType"
           value={type}
@@ -79,10 +93,20 @@ const CategoryForm = ({ onCategoryAdded }) => {
       <button
         type="submit"
         className={`w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-200
-                     ${isLoading ? 'opacity-60 cursor-not-allowed flex items-center justify-center gap-2' : ''}`}
+                     ${
+                       isLoading
+                         ? "opacity-60 cursor-not-allowed flex items-center justify-center gap-2"
+                         : ""
+                     }`}
         disabled={isLoading}
       >
-        {isLoading ? <><ImSpinner2 className="animate-spin" /> Adding...</> : 'Add Category'}
+        {isLoading ? (
+          <>
+            <ImSpinner2 className="animate-spin" /> Adding...
+          </>
+        ) : (
+          "Add Category"
+        )}
       </button>
     </form>
   );

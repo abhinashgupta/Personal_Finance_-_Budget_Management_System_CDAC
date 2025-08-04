@@ -1,32 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { FiDollarSign, FiCalendar, FiEdit, FiTrash2, FiAlertCircle } from 'react-icons/fi';
-import { ImSpinner2 } from 'react-icons/im';
-import { FaRupeeSign } from 'react-icons/fa';
-import { formatCurrency } from '../../utils/formatters.js';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import {
+  FiDollarSign,
+  FiCalendar,
+  FiEdit,
+  FiTrash2,
+  FiAlertCircle,
+} from "react-icons/fi";
+import { ImSpinner2 } from "react-icons/im";
+import { FaRupeeSign } from "react-icons/fa";
+import { formatCurrency } from "../../utils/formatters.js";
 
 const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
-  const [type, setType] = useState('expense');
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('');
-  const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+  const [type, setType] = useState("expense");
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
   const [recurring, setRecurring] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const [overBudgetWarning, setOverBudgetWarning] = useState(null);
 
-  const filteredCategories = categories.filter(cat => cat.type === type);
+  const filteredCategories = categories.filter((cat) => cat.type === type);
 
   useEffect(() => {
-    if (!filteredCategories.some(cat => cat._id === category)) {
-      setCategory('');
+    if (!filteredCategories.some((cat) => cat._id === category)) {
+      setCategory("");
     }
   }, [type, filteredCategories, category]);
 
   useEffect(() => {
-    if (type === 'expense' && category && amount && date) {
+    if (type === "expense" && category && amount && date) {
       const parsedAmount = parseFloat(amount);
       if (isNaN(parsedAmount) || parsedAmount <= 0) {
         setOverBudgetWarning(null);
@@ -34,21 +40,30 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
       }
 
       const transactionDate = new Date(date);
-      const relevantBudget = budgets.find(b =>
-        b.category._id === category &&
-        transactionDate >= new Date(b.startdate) &&
-        transactionDate <= new Date(b.enddate)
+      const relevantBudget = budgets.find(
+        (b) =>
+          b.category._id === category &&
+          transactionDate >= new Date(b.startdate) &&
+          transactionDate <= new Date(b.enddate)
       );
 
       if (relevantBudget) {
         if (relevantBudget.remaining !== undefined) {
-            if (parsedAmount > relevantBudget.remaining) {
-                setOverBudgetWarning(`This transaction of ${formatCurrency(parsedAmount)} would put you over your budget of ${formatCurrency(relevantBudget.limit)} for "${relevantBudget.category.name}". Remaining: ${formatCurrency(relevantBudget.remaining)}`);
-            } else {
-                setOverBudgetWarning(null);
-            }
-        } else {
+          if (parsedAmount > relevantBudget.remaining) {
+            setOverBudgetWarning(
+              `This transaction of ${formatCurrency(
+                parsedAmount
+              )} would put you over your budget of ${formatCurrency(
+                relevantBudget.limit
+              )} for "${
+                relevantBudget.category.name
+              }". Remaining: ${formatCurrency(relevantBudget.remaining)}`
+            );
+          } else {
             setOverBudgetWarning(null);
+          }
+        } else {
+          setOverBudgetWarning(null);
         }
       } else {
         setOverBudgetWarning(null);
@@ -64,44 +79,48 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
     setIsLoading(true);
 
     if (!amount || !category || !date) {
-      setError('Please fill all required fields: Amount, Category, and Date.');
+      setError("Please fill all required fields: Amount, Category, and Date.");
       setIsLoading(false);
       return;
     }
     if (parseFloat(amount) <= 0) {
-      setError('Amount must be a positive number.');
+      setError("Amount must be a positive number.");
       setIsLoading(false);
       return;
     }
     if (!category) {
-        setError('Please select a valid category from the dropdown.');
-        setIsLoading(false);
-        return;
+      setError("Please select a valid category from the dropdown.");
+      setIsLoading(false);
+      return;
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/transactions', {
-        type,
-        amount: parseFloat(amount),
-        category,
-        description,
-        date,
-        recurring
-      }, { withCredentials: true });
+      const res = await axios.post(
+        "https://personal-finance-budget-management-c4th.onrender.com/transactions",
+        {
+          type,
+          amount: parseFloat(amount),
+          category,
+          description,
+          date,
+          recurring,
+        },
+        { withCredentials: true }
+      );
 
       if (res.data.success) {
         onTransactionAdded();
-        setAmount('');
-        setCategory('');
-        setDescription('');
-        setDate('');
+        setAmount("");
+        setCategory("");
+        setDescription("");
+        setDate("");
         setRecurring(false);
         setOverBudgetWarning(null);
       } else {
-        setError(res.data.message || 'Failed to add transaction.');
+        setError(res.data.message || "Failed to add transaction.");
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error adding transaction.');
+      setError(err.response?.data?.message || "Error adding transaction.");
       console.error("Add transaction error:", err);
     } finally {
       setIsLoading(false);
@@ -121,9 +140,10 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
         </p>
       )}
 
-
       <div>
-        <label htmlFor="type" className="block text-gray-700 font-medium mb-1">Type</label>
+        <label htmlFor="type" className="block text-gray-700 font-medium mb-1">
+          Type
+        </label>
         <select
           id="type"
           value={type}
@@ -136,9 +156,17 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
       </div>
 
       <div>
-        <label htmlFor="amount" className="block text-gray-700 font-medium mb-1">Amount</label>
+        <label
+          htmlFor="amount"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          Amount
+        </label>
         <div className="relative">
-          <FaRupeeSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <FaRupeeSign
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
           <input
             id="amount"
             type="number"
@@ -152,7 +180,12 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
       </div>
 
       <div>
-        <label htmlFor="category" className="block text-gray-700 font-medium mb-1">Category</label>
+        <label
+          htmlFor="category"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          Category
+        </label>
         <select
           id="category"
           value={category}
@@ -164,19 +197,26 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
         >
           <option value="">Select a {type} category</option>
           {filteredCategories.length > 0 ? (
-            filteredCategories.map(cat => (
+            filteredCategories.map((cat) => (
               <option key={cat._id} value={cat._id}>
                 {cat.name}
               </option>
             ))
           ) : (
-            <option value="" disabled>No {type} categories available. Please create one.</option>
+            <option value="" disabled>
+              No {type} categories available. Please create one.
+            </option>
           )}
         </select>
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-gray-700 font-medium mb-1">Description (Optional)</label>
+        <label
+          htmlFor="description"
+          className="block text-gray-700 font-medium mb-1"
+        >
+          Description (Optional)
+        </label>
         <textarea
           id="description"
           placeholder="e.g., Dinner with friends"
@@ -188,7 +228,9 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
       </div>
 
       <div>
-        <label htmlFor="date" className="block text-gray-700 font-medium mb-1">Date</label>
+        <label htmlFor="date" className="block text-gray-700 font-medium mb-1">
+          Date
+        </label>
         <input
           id="date"
           type="date"
@@ -207,16 +249,28 @@ const TransactionForm = ({ categories, budgets, onTransactionAdded }) => {
           onChange={(e) => setRecurring(e.target.checked)}
           className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
         />
-        <label htmlFor="recurring" className="text-gray-700">Recurring Transaction</label>
+        <label htmlFor="recurring" className="text-gray-700">
+          Recurring Transaction
+        </label>
       </div>
 
       <button
         type="submit"
         className={`w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition duration-200
-                     ${isLoading ? 'opacity-60 cursor-not-allowed flex items-center justify-center gap-2' : ''}`}
+                     ${
+                       isLoading
+                         ? "opacity-60 cursor-not-allowed flex items-center justify-center gap-2"
+                         : ""
+                     }`}
         disabled={isLoading || overBudgetWarning}
       >
-        {isLoading ? <><ImSpinner2 className="animate-spin" /> Adding...</> : 'Add Transaction'}
+        {isLoading ? (
+          <>
+            <ImSpinner2 className="animate-spin" /> Adding...
+          </>
+        ) : (
+          "Add Transaction"
+        )}
       </button>
     </form>
   );

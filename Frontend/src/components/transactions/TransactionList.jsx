@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import { ImSpinner2 } from 'react-icons/im';
-import { formatCurrency, formatDate } from '../../utils/formatters.js';
-import ConfirmModal from '../common/ConfirmModal.jsx';
+import React, { useState } from "react";
+import axios from "axios";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
+import { ImSpinner2 } from "react-icons/im";
+import { formatCurrency, formatDate } from "../../utils/formatters.js";
+import ConfirmModal from "../common/ConfirmModal.jsx";
 
-const TransactionList = ({ transactions, categories, onTransactionDeleted, onTransactionUpdated }) => {
+const TransactionList = ({
+  transactions,
+  categories,
+  onTransactionDeleted,
+  onTransactionUpdated,
+}) => {
   const [editingTransactionId, setEditingTransactionId] = useState(null);
   const [editFormData, setEditFormData] = useState({});
   const [deleteLoadingId, setDeleteLoadingId] = useState(null);
@@ -14,12 +19,12 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [transactionToDeleteId, setTransactionToDeleteId] = useState(null);
-  const [transactionToDeleteDescription, setTransactionToDeleteDescription] = useState('');
-
+  const [transactionToDeleteDescription, setTransactionToDeleteDescription] =
+    useState("");
 
   const confirmDelete = (id, description) => {
     setTransactionToDeleteId(id);
-    setTransactionToDeleteDescription(description || 'this transaction');
+    setTransactionToDeleteDescription(description || "this transaction");
     setIsConfirmModalOpen(true);
   };
 
@@ -30,29 +35,31 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
     setError(null);
     setDeleteLoadingId(transactionToDeleteId);
     try {
-      await axios.delete(`http://localhost:5000/transactions/${transactionToDeleteId}`, {
-        withCredentials: true
-      });
+      await axios.delete(
+        `https://personal-finance-budget-management-c4th.onrender.com/transactions/${transactionToDeleteId}`,
+        {
+          withCredentials: true,
+        }
+      );
       onTransactionDeleted();
     } catch (err) {
-      setError(err.response?.data?.message || 'Error deleting transaction.');
+      setError(err.response?.data?.message || "Error deleting transaction.");
       console.error("Delete transaction error:", err);
     } finally {
       setDeleteLoadingId(null);
       setTransactionToDeleteId(null);
-      setTransactionToDeleteDescription('');
+      setTransactionToDeleteDescription("");
     }
   };
 
   const cancelDelete = () => {
     setIsConfirmModalOpen(false);
     setTransactionToDeleteId(null);
-    setTransactionToDeleteDescription('');
+    setTransactionToDeleteDescription("");
   };
 
-
   const handleDelete = async (id) => {
-    confirmDelete(id, transactions.find(t => t._id === id)?.description);
+    confirmDelete(id, transactions.find((t) => t._id === id)?.description);
   };
 
   const handleEditClick = (transaction) => {
@@ -60,18 +67,18 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
     setEditFormData({
       type: transaction.type,
       amount: transaction.amount,
-      category: transaction.category ? transaction.category._id : '',
-      description: transaction.description || '',
-      date: new Date(transaction.date).toISOString().split('T')[0],
-      recurring: transaction.recurring
+      category: transaction.category ? transaction.category._id : "",
+      description: transaction.description || "",
+      date: new Date(transaction.date).toISOString().split("T")[0],
+      recurring: transaction.recurring,
     });
   };
 
   const handleEditChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setEditFormData(prev => ({
+    setEditFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -81,19 +88,23 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
     setEditLoadingId(editingTransactionId);
 
     try {
-      const res = await axios.put(`http://localhost:5000/transactions/${editingTransactionId}`, {
-        ...editFormData,
-        amount: parseFloat(editFormData.amount),
-      }, { withCredentials: true });
+      const res = await axios.put(
+        `https://personal-finance-budget-management-c4th.onrender.com/transactions/${editingTransactionId}`,
+        {
+          ...editFormData,
+          amount: parseFloat(editFormData.amount),
+        },
+        { withCredentials: true }
+      );
 
       if (res.data.success) {
         onTransactionUpdated();
         setEditingTransactionId(null);
       } else {
-        setError(res.data.message || 'Failed to update transaction.');
+        setError(res.data.message || "Failed to update transaction.");
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Error updating transaction.');
+      setError(err.response?.data?.message || "Error updating transaction.");
       console.error("Update transaction error:", err);
     } finally {
       setEditLoadingId(null);
@@ -106,12 +117,13 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
   };
 
   const getCategoryName = (categoryId) => {
-    const cat = categories.find(c => c._id === categoryId);
-    return cat ? cat.name : 'Unknown';
+    const cat = categories.find((c) => c._id === categoryId);
+    return cat ? cat.name : "Unknown";
   };
 
-  const filteredCategories = categories.filter(cat => cat.type === editFormData.type);
-
+  const filteredCategories = categories.filter(
+    (cat) => cat.type === editFormData.type
+  );
 
   return (
     <div className="overflow-x-auto">
@@ -122,10 +134,12 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
       )}
 
       {transactions.length === 0 ? (
-        <p className="text-gray-500 italic text-center py-4">No transactions added yet. Add one to see it here!</p>
+        <p className="text-gray-500 italic text-center py-4">
+          No transactions added yet. Add one to see it here!
+        </p>
       ) : (
         <ul className="space-y-4">
-          {transactions.map(t => (
+          {transactions.map((t) => (
             <li
               key={t._id}
               className="p-4 bg-gray-50 rounded-lg border border-gray-200 shadow-sm transition-all duration-200 ease-in-out
@@ -134,7 +148,9 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
               {editingTransactionId === t._id ? (
                 <form onSubmit={handleEditSubmit} className="w-full space-y-3">
                   <div>
-                    <label htmlFor="edit-type" className="sr-only">Type</label>
+                    <label htmlFor="edit-type" className="sr-only">
+                      Type
+                    </label>
                     <select
                       id="edit-type"
                       name="type"
@@ -148,7 +164,9 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
                   </div>
 
                   <div>
-                    <label htmlFor="edit-amount" className="sr-only">Amount</label>
+                    <label htmlFor="edit-amount" className="sr-only">
+                      Amount
+                    </label>
                     <input
                       id="edit-amount"
                       type="number"
@@ -162,7 +180,9 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
                   </div>
 
                   <div>
-                    <label htmlFor="edit-category" className="sr-only">Category</label>
+                    <label htmlFor="edit-category" className="sr-only">
+                      Category
+                    </label>
                     <select
                       id="edit-category"
                       name="category"
@@ -172,14 +192,18 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
                       required
                     >
                       <option value="">Select Category</option>
-                      {filteredCategories.map(cat => (
-                        <option key={cat._id} value={cat._id}>{cat.name}</option>
+                      {filteredCategories.map((cat) => (
+                        <option key={cat._id} value={cat._id}>
+                          {cat.name}
+                        </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label htmlFor="edit-description" className="sr-only">Description</label>
+                    <label htmlFor="edit-description" className="sr-only">
+                      Description
+                    </label>
                     <input
                       id="edit-description"
                       type="text"
@@ -192,7 +216,9 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
                   </div>
 
                   <div>
-                    <label htmlFor="edit-date" className="sr-only">Date</label>
+                    <label htmlFor="edit-date" className="sr-only">
+                      Date
+                    </label>
                     <input
                       id="edit-date"
                       type="date"
@@ -213,7 +239,9 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
                       onChange={handleEditChange}
                       className="mr-2 h-4 w-4"
                     />
-                    <label htmlFor="edit-recurring" className="text-gray-700">Recurring</label>
+                    <label htmlFor="edit-recurring" className="text-gray-700">
+                      Recurring
+                    </label>
                   </div>
 
                   <div className="flex justify-end space-x-2 mt-4">
@@ -230,7 +258,12 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
                       className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition flex items-center gap-1"
                       disabled={editLoadingId === t._id}
                     >
-                      {editLoadingId === t._id ? <ImSpinner2 className="animate-spin" /> : <FiEdit />} Update
+                      {editLoadingId === t._id ? (
+                        <ImSpinner2 className="animate-spin" />
+                      ) : (
+                        <FiEdit />
+                      )}{" "}
+                      Update
                     </button>
                   </div>
                 </form>
@@ -238,15 +271,25 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
                 <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center">
                   <div className="mb-2 sm:mb-0">
                     <p className="font-semibold text-gray-800 text-lg">
-                      {t.description || 'No Description'} -{' '}
-                      <span className={`font-bold ${t.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                      {t.description || "No Description"} -{" "}
+                      <span
+                        className={`font-bold ${
+                          t.type === "income"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
                         {formatCurrency(t.amount)}
                       </span>
                     </p>
                     <p className="text-sm text-gray-600">
-                      Category: {t.category ? t.category.name : 'Unknown'} |{' '}
+                      Category: {t.category ? t.category.name : "Unknown"} |{" "}
                       Date: {formatDate(t.date)}
-                      {t.recurring && <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">Recurring</span>}
+                      {t.recurring && (
+                        <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">
+                          Recurring
+                        </span>
+                      )}
                     </p>
                   </div>
                   <div className="flex space-x-2">
@@ -261,7 +304,11 @@ const TransactionList = ({ transactions, categories, onTransactionDeleted, onTra
                       className="text-red-500 hover:text-red-700 text-sm p-2 rounded-md hover:bg-red-100 transition flex items-center gap-1"
                       disabled={deleteLoadingId === t._id}
                     >
-                      {deleteLoadingId === t._id ? <ImSpinner2 className="animate-spin" /> : <FiTrash2 size={18} />}
+                      {deleteLoadingId === t._id ? (
+                        <ImSpinner2 className="animate-spin" />
+                      ) : (
+                        <FiTrash2 size={18} />
+                      )}
                     </button>
                   </div>
                 </div>
