@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkValidData } from "../../utils/FormValidation";
-import apiClient from "../../api"; // Use the central apiClient for requests
+import apiClient from "../../api"; 
 
 import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
@@ -37,7 +37,6 @@ const SignUp = () => {
     }
 
     try {
-      // Use apiClient for the registration request
       const res = await apiClient.post("/auth/register", {
         firstname,
         lastname,
@@ -46,7 +45,6 @@ const SignUp = () => {
       });
 
       if (res.data.success) {
-        // On success, navigate to the verification page with the user's email
         navigate(`/verify-email?email=${email}`);
       } else {
         setErrorMessage(
@@ -66,7 +64,6 @@ const SignUp = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-200 to-pink-300 relative overflow-hidden p-4 sm:p-8">
-      {/* Background elements */}
       <div className="absolute top-5 left-1/3 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-0"></div>
       <div className="absolute bottom-10 right-1/4 w-56 h-56 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
       <div className="absolute top-1/4 right-1/2 w-48 h-48 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
@@ -81,7 +78,6 @@ const SignUp = () => {
           Create Account
         </h2>
 
-        {/* Input fields for user details */}
         <div className="mb-4 relative">
           <label htmlFor="firstname" className="sr-only">
             First Name

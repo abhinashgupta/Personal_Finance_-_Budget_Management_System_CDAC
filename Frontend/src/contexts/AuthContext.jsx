@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-// ⬇️ 1. Import your new apiClient
-import apiClient from "../api"; // Adjust path if necessary
+import apiClient from "../api";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext(null);
@@ -22,7 +21,6 @@ export const AuthProvider = ({ children }) => {
 
     setLoading(true);
     try {
-      // ⬇️ 2. Use apiClient here. It automatically adds the token.
       const res = await apiClient.get("/users/profile");
 
       if (res.data.success) {
@@ -31,7 +29,7 @@ export const AuthProvider = ({ children }) => {
       } else {
         setUser(null);
         setIsAuthenticated(false);
-        localStorage.removeItem("authToken"); // Clean up invalid token
+        localStorage.removeItem("authToken"); 
       }
     } catch (error) {
       console.error(
@@ -40,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       );
       setUser(null);
       setIsAuthenticated(false);
-      localStorage.removeItem("authToken"); // Clean up invalid token
+      localStorage.removeItem("authToken"); 
     } finally {
       setLoading(false);
     }
@@ -53,7 +51,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    // ⬇️ 3. Clear the token from localStorage on logout
     localStorage.removeItem("authToken");
     setUser(null);
     setIsAuthenticated(false);

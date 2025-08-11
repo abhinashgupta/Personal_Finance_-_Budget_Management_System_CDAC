@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
     },
-    // --- Fields for OTP and Email Verification ---
+
     isVerified: {
       type: Boolean,
       default: false,
@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
       required: false,
     },
-    // --- Fields for Password Reset ---
+
     resetPasswordToken: {
       type: String,
       required: false,
@@ -58,6 +58,6 @@ const userSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
-); // This automatically adds createdAt and updatedAt fields
+); 
 
 module.exports = mongoose.model("User", userSchema);

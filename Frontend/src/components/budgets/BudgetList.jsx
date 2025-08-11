@@ -303,7 +303,7 @@ const BudgetList = ({
                       {b.period.charAt(0).toUpperCase() + b.period.slice(1)} |{" "}
                       {formatDate(b.startdate)} - {formatDate(b.enddate)}
                     </p>
-                    {/* Budget vs Actual Display */}
+                 
                     <div className="mt-1 flex items-center">
                       <span className="text-sm font-medium text-gray-700 mr-2">
                         Actual Spent:
@@ -359,7 +359,7 @@ const BudgetList = ({
           ))}
         </ul>
       )}
-      {/* CONFIRMATION MODAL FOR DELETION */}
+   
       <ConfirmModal
         isOpen={isConfirmModalOpen}
         message={`Are you sure you want to delete the budget for ${getCategoryName(

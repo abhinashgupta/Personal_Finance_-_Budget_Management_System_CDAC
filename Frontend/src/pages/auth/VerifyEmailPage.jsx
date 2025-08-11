@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import apiClient from "../../api"; // Use the central apiClient
+import apiClient from "../../api"; 
 import { ImSpinner2 } from "react-icons/im";
 import { FiMail, FiCheckCircle } from "react-icons/fi";
 
@@ -39,7 +39,6 @@ const VerifyEmailPage = () => {
     }
 
     try {
-      // Use apiClient for the verification request
       const res = await apiClient.post("/auth/verify-email-otp", {
         email,
         otp,
@@ -50,7 +49,7 @@ const VerifyEmailPage = () => {
           res.data.message || "Email verified successfully! You can now log in."
         );
         setOtp("");
-        setTimeout(() => navigate("/"), 3000); // Redirect to login page on success
+        setTimeout(() => navigate("/"), 3000); 
       } else {
         setErrorMessage(
           res.data.message || "OTP verification failed. Please try again."
@@ -79,7 +78,6 @@ const VerifyEmailPage = () => {
     }
 
     try {
-      // Use apiClient to resend the OTP
       const res = await apiClient.post("/auth/send-verification-otp", {
         email,
       });
@@ -106,7 +104,7 @@ const VerifyEmailPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-100 to-teal-200 relative overflow-hidden p-4 sm:p-8">
-      {/* Background elements */}
+
       <div className="absolute top-10 left-1/4 w-48 h-48 bg-green-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
       <div className="absolute bottom-20 right-1/3 w-64 h-64 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
       <div className="absolute top-1/2 left-1/2 w-56 h-56 bg-lime-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>

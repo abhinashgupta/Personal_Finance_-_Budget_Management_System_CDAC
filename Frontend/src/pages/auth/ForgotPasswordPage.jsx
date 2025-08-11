@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiClient from "../../api"; // Use the central apiClient
+import apiClient from "../../api";
 import { FiMail } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 
@@ -24,7 +24,6 @@ const ForgotPasswordPage = () => {
     }
 
     try {
-      // Use apiClient and remove withCredentials
       const res = await apiClient.post("/auth/forgot-password", { email });
 
       if (res.data.success) {
@@ -51,7 +50,7 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-200 to-purple-300 relative overflow-hidden p-4 sm:p-8">
-      {/* Background elements */}
+
       <div className="absolute top-10 left-1/4 w-48 h-48 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
       <div className="absolute bottom-20 right-1/3 w-64 h-64 bg-violet-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
       <div className="absolute top-1/2 left-1/2 w-56 h-56 bg-fuchsia-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>

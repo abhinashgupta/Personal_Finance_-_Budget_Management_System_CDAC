@@ -2,13 +2,13 @@ const User = require("../models/User");
 const Category = require("../models/Category");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { sendEmail } = require("../services/emailService"); // For sending OTP and reset links
-const crypto = require("crypto"); // For generating password reset tokens
+const { sendEmail } = require("../services/emailService"); 
+const crypto = require("crypto"); 
 
 const asyncHandler = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
-// Helper function to generate a 6-digit OTP
+
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
@@ -16,18 +16,15 @@ const generateOTP = () => {
 exports.register = asyncHandler(async (req, res) => {
   const { firstname, lastname, email, password } = req.body;
 
-  // --- (Validation remains the same) ---
   if (!firstname || !lastname || !email || !password) {
     return res
       .status(400)
       .json({ message: "All fields are required", success: false });
   }
-  // ... other validation ...
 
   const trimmedEmail = email.trim().toLowerCase();
   const existingUser = await User.findOne({ email: trimmedEmail });
   if (existingUser) {
-    // Handle cases where user exists but is not verified
     if (existingUser.isVerified) {
       return res
         .status(409)
@@ -51,13 +48,10 @@ exports.register = asyncHandler(async (req, res) => {
     lastname: lastname.trim(),
     email: trimmedEmail,
     password: hashedPassword,
-    isVerified: false, // User is not verified by default
+    isVerified: false, 
   });
 
-  // --- (Default category creation remains the same) ---
-  // ...
 
-  // --- NEW: OTP Generation and Email Sending ---
   const otp = generateOTP();
   const otpExpires = Date.now() + 10 * 60 * 1000; // OTP expires in 10 minutes
 
@@ -102,7 +96,6 @@ exports.login = asyncHandler(async (req, res) => {
       .json({ message: "User not found with this email", success: false });
   }
 
-  // --- NEW: Check if user's email is verified ---
   if (!userExist.isVerified) {
     return res
       .status(403)
@@ -128,7 +121,7 @@ exports.login = asyncHandler(async (req, res) => {
  return res.status(200).json({
    message: "User Logged In Successfully",
    success: true,
-   token: token, // This is correct
+   token: token, 
    user: {
      id: userExist._id,
      firstname: userExist.firstname,
@@ -146,7 +139,7 @@ exports.logout = (req, res) => {
   });
 };
 
-// --- NEW: Function to verify the OTP ---
+
 exports.sendVerificationOtp = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
@@ -244,7 +237,6 @@ exports.verifyEmailOtp = asyncHandler(async (req, res) => {
     });
 });
 
-// --- NEW: Function for "Forgot Password" ---
 exports.forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
@@ -276,11 +268,9 @@ exports.forgotPassword = asyncHandler(async (req, res) => {
         message: "Password reset link sent to your email.",
       });
   } catch (error) {
-    // ... error handling
   }
 });
 
-// --- NEW: Function to reset the password with a token ---
 exports.resetPassword = asyncHandler(async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;

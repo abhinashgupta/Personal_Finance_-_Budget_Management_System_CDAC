@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
-
-// 1. apiClient is correctly imported
 import apiClient from "../api.js";
-
 import CategoryForm from "../components/categories/CategoryForm.jsx";
 import CategoryList from "../components/categories/CategoryList.jsx";
 import StatusDisplay from "../components/common/StatusDisplay.jsx";
@@ -32,10 +29,8 @@ const CategoriesPage = () => {
       if (sortBy) queryParams.append("sortBy", sortBy);
       if (sortOrder) queryParams.append("sortOrder", sortOrder);
 
-      // The URL no longer needs the full domain
       const url = `/categories?${queryParams.toString()}`;
-
-      // 2. Use apiClient and remove withCredentials
+      
       const res = await apiClient.get(url);
 
       if (res.data.success) {
